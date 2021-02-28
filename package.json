@@ -1,0 +1,51 @@
+{
+  "version": "0.0.1",
+  "name": "@augm/site",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/augm-dev/augm-dev.git"
+  },
+  "description": "Builder for simple and fast websites",
+  "keywords": [
+    "augm",
+    "augm-dev",
+    "ssr",
+    "ssg",
+    "builder"
+  ],
+  "license": "MIT",
+  "module": "dist/index.js",
+  "main": "dist/index.cjs",
+  "types": "types/index.d.ts",
+  "files": [
+    "dist",
+    "types"
+  ],
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">= 10"
+  },
+  "scripts": {
+    "build": "rollup -c",
+    "prepublishOnly": "npm run build",
+    "test": "uvu -r esm test"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^10.0.0",
+    "esm": "^3.2.25",
+    "rollup": "^2.33.3"
+  },
+  "dependencies": {
+    "augm-dev": "^0.3.1",
+    "augm-it": "^0.5.0",
+    "csso": "^4.2.0",
+    "obj-string": "^1.0.0",
+    "uid": "^2.0.0"
+  }
+}
