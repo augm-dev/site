@@ -26,7 +26,7 @@ let prefix = (str, obj) => {
 
 export function itBuilder(options = {}){
   let { minify, npm, output, optimize } = { 
-    ...defaultOptions, 
+    ...defaultOptions,
     ...options
   }
 
@@ -36,9 +36,9 @@ export function itBuilder(options = {}){
 
   return {
     single: (id) => prefix(options.output, Object.assign(
-      style.single(id),
-      saturation.single(id),
-      render.single(id)
+      style.single(id.slice(0,-3)),
+      saturation.single(id.slice(0,-3)),
+      render.single(id.slice(0,-3))
     )),
     aggregate: prefix(options.output, Object.assign(
       style.aggregate,

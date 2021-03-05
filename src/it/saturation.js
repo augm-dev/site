@@ -28,7 +28,7 @@ export function saturationBuilder({ minify, npm, optimize }){
       'saturation.js': function(targets){
         let manifest = {}
         let imports_strings = []
-        targets.forEach(({ module, contents, id }) => {
+        targets.forEach(({ module, id }) => {
           if(module.handlers && typeof module.handlers === 'object'){
             for(let handle in module.handlers){
               imports_strings.push(`"${handle}": () => import(".${id}/handlers.js")`)

@@ -80,7 +80,7 @@ function saturationBuilder({ minify, npm, optimize }){
     aggregate: {
       'saturation.js': function(targets){
         let imports_strings = [];
-        targets.forEach(({ module, contents, id }) => {
+        targets.forEach(({ module, id }) => {
           if(module.handlers && typeof module.handlers === 'object'){
             for(let handle in module.handlers){
               imports_strings.push(`"${handle}": () => import(".${id}/handlers.js")`);
@@ -178,7 +178,7 @@ let prefix = (str, obj) => {
 
 function itBuilder(options = {}){
   let { minify, npm, output, optimize } = { 
-    ...defaultOptions, 
+    ...defaultOptions,
     ...options
   };
 
@@ -188,9 +188,9 @@ function itBuilder(options = {}){
 
   return {
     single: (id) => prefix(options.output, Object.assign(
-      style.single(id),
-      saturation.single(id),
-      render.single(id)
+      style.single(id.slice(0,-3)),
+      saturation.single(id.slice(0,-3)),
+      render.single(id.slice(0,-3))
     )),
     aggregate: prefix(options.output, Object.assign(
       style.aggregate,
