@@ -83,7 +83,7 @@ function saturationBuilder({ minify, npm, optimize }){
         targets.forEach(({ module, id }) => {
           if(module.handlers && typeof module.handlers === 'object'){
             for(let handle in module.handlers){
-              imports_strings.push(`"${handle}": () => import(".${id}/handlers.js")`);
+              imports_strings.push(`"${handle}": () => import(".${id.slice(0,-3)}/handlers.js")`);
             }
           }
         });
