@@ -1,6 +1,6 @@
 import { compile } from 'augm-dev'
-import { stringifyObject } from 'obj-string'
-import { idToMaxDepth, deeper } from '../_utils'
+// import { stringifyObject } from 'obj-string'
+import { idToMaxDepth, localize } from '../_utils'
 
 export function saturationBuilder({ minify, npm, optimize }){
   return {
@@ -15,10 +15,7 @@ export function saturationBuilder({ minify, npm, optimize }){
             minify,
             npm,
             optimize,
-            local(dep){
-              let new_path = dep.startsWith(idToMaxDepth(id)) ? dep + '/handlers.js' : dep
-              return { path: deeper(new_path), external: true }
-            }
+            local: localize('/index.js', id)
           })
         }
         return `export let handlers = null;`

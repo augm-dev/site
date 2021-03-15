@@ -3,15 +3,8 @@
 Object.defineProperty(exports, '__esModule', { value: true });
 
 var augmDev = require('augm-dev');
-require('obj-string');
 
-function idToMaxDepth(id=""){
-  let numSlashes = id.split('/').length - 1;
-  if(numSlashes > 1 ){
-    return '../'.repeat(numSlashes-1)
-  }
-  return './'
-}
+const path = require('path');
 
 function deeper(p){
   if(p.startsWith('./')){
@@ -20,6 +13,19 @@ function deeper(p){
     return '../'+p
   }
   return p
+}
+
+function localize(dest="/index.js", id=""){
+  return function(dep){
+    path.join('./',id,'/../',dep);
+    let id_depth = id.split('/').filter(s => s.length > 0);
+    if(dep.startsWith('../'.repeat(id_depth.length))){
+      return { path: dep, external: false }
+    } else {
+      dep = dep.slice(0,-3) === '.js' ? dep.slice(0,-3) : dep;
+      return { path: deeper(dep+dest), external: true }
+    }
+  }
 }
 
 function renderBuilder({ npm, minify, optimize }){
@@ -32,10 +38,7 @@ function renderBuilder({ npm, minify, optimize }){
           minify,
           npm,
           optimize,
-          local(dep){
-            let new_path = dep.startsWith(idToMaxDepth(id)) ? dep + '/render.js' : dep;
-            return { path: deeper(new_path), external: true }
-          }
+          local: localize('/render.js',id)
         })
       }
     }
@@ -46,6 +49,8 @@ function renderBuilder({ npm, minify, optimize }){
       [id+'/render.js']: compileComponent(`
         export { default } from '@';
       `),
+      [id+'/index.js']: () => `export { default } from './render.js';
+export * from './handlers.js';`,
       // [id+'/node.js']: compileComponent(`
       //   import { html } from 'augm-it';
       //   import { default as it } from '@';
@@ -68,10 +73,7 @@ function saturationBuilder({ minify, npm, optimize }){
             minify,
             npm,
             optimize,
-            local(dep){
-              let new_path = dep.startsWith(idToMaxDepth(id)) ? dep + '/handlers.js' : dep;
-              return { path: deeper(new_path), external: true }
-            }
+            local: localize('/index.js', id)
           })
         }
         return `export let handlers = null;`

@@ -1,5 +1,5 @@
 import { compile } from 'augm-dev'
-import { idToMaxDepth, deeper } from '../_utils'
+import { idToMaxDepth, localize } from '../_utils'
 
 export function renderBuilder({ npm, minify, optimize }){
 
@@ -11,10 +11,7 @@ export function renderBuilder({ npm, minify, optimize }){
           minify,
           npm,
           optimize,
-          local(dep){
-            let new_path = dep.startsWith(idToMaxDepth(id)) ? dep + '/render.js' : dep
-            return { path: deeper(new_path), external: true }
-          }
+          local: localize('/render.js',id)
         })
       }
     }
@@ -25,6 +22,8 @@ export function renderBuilder({ npm, minify, optimize }){
       [id+'/render.js']: compileComponent(`
         export { default } from '@';
       `),
+      [id+'/index.js']: () => `export { default } from './render.js';
+export * from './handlers.js';`,
       // [id+'/node.js']: compileComponent(`
       //   import { html } from 'augm-it';
       //   import { default as it } from '@';
