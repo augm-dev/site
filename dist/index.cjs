@@ -19,8 +19,8 @@ function localize(dest="/index.js", id=""){
   return function(dep){
     path.join('./',id,'/../',dep);
     let id_depth = id.split('/').filter(s => s.length > 0);
-    if(dep.startsWith('../'.repeat(id_depth.length))){
-      return { path: dep, external: false }
+    if(dep.endsWith('.js')||  dep.startsWith('../'.repeat(id_depth.length))){
+      return { path: dep, external: true }
     } else {
       dep = dep.slice(0,-3) === '.js' ? dep.slice(0,-3) : dep;
       return { path: deeper(dep+dest), external: true }
@@ -38,7 +38,7 @@ function renderBuilder({ npm, minify, optimize }){
           minify,
           npm,
           optimize,
-          local: localize('/render.js',id)
+          local: localize('/index.js',id)
         })
       }
     }
@@ -46,11 +46,11 @@ function renderBuilder({ npm, minify, optimize }){
 
   return {
     single: (id) => ({
-      [id+'/render.js']: compileComponent(`
-        export { default } from '@';
-      `),
-      [id+'/index.js']: () => `export { default } from './render.js';
-export * from './handlers.js';`,
+      // [id+'/render.js']: compileComponent(`
+      //   export { default } from '@';
+      // `),
+      [id+'/index.js']: compileComponent(`export { default } from '@';
+export * from './handlers.js';`),
       // [id+'/node.js']: compileComponent(`
       //   import { html } from 'augm-it';
       //   import { default as it } from '@';
